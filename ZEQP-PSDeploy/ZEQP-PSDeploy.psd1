@@ -72,6 +72,7 @@ Description = 'ZEQP-PSDeploy'
 FunctionsToExport = @(
     'New-DomainBind',
     'Remove-Deploy',
+    'Remove-DeploySvc',
     'Start-Deploy',
     'Start-DeploySvc',
     'Update-DomainBind'
