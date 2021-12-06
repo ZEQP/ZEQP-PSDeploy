@@ -28,3 +28,16 @@ Start-Deploy -ComputerName 127.0.0.1 -WebSiteName DefaultWebSite -WebSitePort 80
 #后端
 Start-DeploySvc -ComputerName 127.0.0.1 -ServiceName DefaultService -ServicePort 8054
 ```
+
+## 前置条件
+
+连接到指定的服务器，是运用了PowerShell的运程管理功能
+
+此功能是需要在对应服务器开启PowerShell运程管理功能
+
+```powershell
+#在远程服务器运行此命令（用PowerShell以管理员方式运行）
+Enable-PSRemoting
+#信任指定host。*为所有  （本机和服务器都运行）
+Set-Item wsman:localhost\Client\TrustedHosts -value *
+```
