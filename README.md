@@ -2,6 +2,16 @@
 
 自动部署
 
+## 安装
+
+把此代码下载或通过git clone到本地
+然后在目录下面以管理员方式运行Install.ps1
+
+```powershell
+cd .\ZEQP-PSDeploy
+Install.ps1
+```
+
 ## 自动编译然后发布到指定服务器IIS站点
 
 ```powershell
