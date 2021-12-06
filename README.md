@@ -34,6 +34,9 @@ Start-DeploySvc -ComputerName 127.0.0.1 -ServiceName DefaultService -ServicePort
 连接到指定的服务器，是运用了PowerShell的运程管理功能
 
 此功能是需要在对应服务器开启PowerShell运程管理功能
+(Win服务里面有个WinRM的服务 显示名称：Windows Remote Management (WS-Management))
+
+服务器打开防火墙入站规则“WinRM远程管理”,TCP端口为5985
 
 ```powershell
 #在远程服务器运行此命令（用PowerShell以管理员方式运行）
@@ -41,3 +44,7 @@ Enable-PSRemoting
 #信任指定host。*为所有  （本机和服务器都运行）
 Set-Item wsman:localhost\Client\TrustedHosts -value *
 ```
+
+## 参考文档
+
+[介绍如何对 PowerShell 中的远程操作进行故障排除](https://docs.microsoft.com/zh-cn/powershell/module/microsoft.powershell.core/about/about_remote_troubleshooting?view=powershell-7.2)
