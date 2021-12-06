@@ -6,22 +6,22 @@ function Start-DeploySvc {
         [string]$ServiceName,
         [string]$RemotePath="D:\Publish\",
 		[int]$ServicePort,
-		[ScriptBlock]$ScriptBlock={ param($o) dotnet publish -o $o -c "Release" --no-self-contained -v m --nologo }
+		[ScriptBlock]$ScriptBlock={ param($o) dotnet publish -o $o -c "Release" --no-self-contained -v m --nologo },
+		[string]$OutputPath = ".\bin\publish\"
     )
     Write-Host 'Build Starting' -ForegroundColor Yellow
-    $CurPath = (Resolve-Path .).Path
-    $OutputPath = "$CurPath\bin\publish\"
-    Remove-Item -Path $OutputPath -Force -Recurse
-    Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $OutputPath
-    Write-Host 'Build Completed' -ForegroundColor Green
+	$outPath = (Resolve-Path $OutputPath).Path
+	Write-Host "OutputPath:$outPath" -ForegroundColor Yellow
+	Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $outPath
+	Write-Host 'Build Completed' -ForegroundColor Green
     
     Write-Host 'Compress Starting' -ForegroundColor Yellow
-    $CurDateString = Get-Date -Format "yyyyMMddHHmmss"
-    $ZIPFileName = "$ServiceName$CurDateString.zip"
-    $ZIPFilePath = "$CurPath\$ZIPFileName"
-    $CompressPath = "$OutputPath*"
-    Compress-Archive -Path $CompressPath -DestinationPath $ZIPFilePath
-    Write-Host "Compress Completed $ZIPFilePath" -ForegroundColor Green
+	$CurDateString = Get-Date -Format "yyyyMMddHHmmss"
+	$ZIPFileName = "$ServiceName$CurDateString.zip"
+	$CurPath = (Resolve-Path .).Path
+	$ZIPFilePath = "$CurPath\$ZIPFileName"
+	Compress-Archive -Path "$outPath\*" -DestinationPath $ZIPFilePath
+	Write-Host "Compress Completed $ZIPFilePath" -ForegroundColor Green
     
     Write-Host 'Deploy Starting' -ForegroundColor Yellow
     $Session = New-PSSession -ComputerName $ComputerName -Credential $Credential
