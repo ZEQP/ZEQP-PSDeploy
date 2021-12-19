@@ -15,12 +15,11 @@ function Update-DomainBind {
                 Write-Host "Subject:$subject" -ForegroundColor Green
                 $thumbprint = $cert.Thumbprint
                 Write-Host "Thumbprint:$thumbprint" -ForegroundColor Green
+                # delete server old cert
+                Get-ChildItem -Path Cert:\LocalMachine\My\ | Where-Object Subject -eq $cert.Subject | Remove-Item
+                # install new cert
                 Install-PACertificate -PACertificate $cert
-                # Get-PACertificate $subject | Install-PACertificate
-                # while ($null -eq (Get-ChildItem "Cert:\LocalMachine\My" | Where-Object Thumbprint -eq $thumbprint | Select-Object -First 1)) {
-                #     Write-Host "Wait $subject Install" -ForegroundColor Yellow
-                #     Start-Sleep -Seconds 1
-                # }
+                #change web bind
                 Get-WebBinding -Protocol https | Where-Object BindingInformation -Like $subject | ForEach-Object {
                     $bind = $_
                     $bind
