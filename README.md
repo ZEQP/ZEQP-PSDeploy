@@ -48,7 +48,7 @@ Start-DeploySvc -ComputerName 192.171.1.5 -ServiceName DefaultService -BinaryPat
 #打包为ProjectNameyyyyMMddHHmmss.zip
 #复制到目标服务器RemotePath
 #然后解压到目标服务器RemotePath\ProjectName目录下面
-Update-DeployFile -ComputerName 127.0.0.1 -Credential Administrator -OutputPath .\bin\Release\ -RemotePath D:\Publish\ -ProjectName AppName
+Start-DeployFile -ComputerName 127.0.0.1 -Credential Administrator -OutputPath .\bin\Release\ -RemotePath D:\Publish\ -ProjectName AppName
 ```
 
 ## 前置条件

@@ -1,5 +1,5 @@
-# Update-DeployFile -ComputerName 127.0.0.1 -Credential Administrator -OutputPath .\bin\Release\ -RemotePath D:\Publish\ -ProjectName AppName
-function Update-DeployFile {
+# Start-DeployFile -ComputerName 127.0.0.1 -Credential Administrator -OutputPath .\bin\Release\ -RemotePath D:\Publish\ -ProjectName AppName
+function Start-DeployFile {
 	param (
 		[string]$ComputerName = "localhost",
 		[PSCredential]$Credential = "Administrator",
