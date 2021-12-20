@@ -26,7 +26,7 @@ Start-Deploy -ComputerName 127.0.0.1 -WebSiteName DefaultWebSite -WebSitePort 80
 
 ```powershell
 #后端
-Start-DeploySvc -ComputerName 127.0.0.1 -ServiceName DefaultService -ServicePort 8054
+Start-DeploySvc -ComputerName 127.0.0.1 -ServiceName DefaultService -BinaryPathName AppName.exe -ServicePort 8054
 ```
 
 ## 前置条件

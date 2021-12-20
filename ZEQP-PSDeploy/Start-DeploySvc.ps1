@@ -4,24 +4,25 @@ function Start-DeploySvc {
         [string]$ComputerName = "localhost",
         [PSCredential]$Credential = "Administrator",
         [string]$ServiceName,
-        [string]$RemotePath="D:\Publish\",
-		[int]$ServicePort,
-		[ScriptBlock]$ScriptBlock={ param($o) dotnet publish -o $o -c "Release" --no-self-contained -v m --nologo },
-		[string]$OutputPath = ".\bin\publish\"
+        [string]$BinaryPathName,
+        [string]$RemotePath = "D:\Publish\",
+        [int]$ServicePort,
+        [ScriptBlock]$ScriptBlock = { param($o) dotnet publish -o $o -c "Release" --no-self-contained -v m --nologo },
+        [string]$OutputPath = ".\bin\publish\"
     )
     Write-Host 'Build Starting' -ForegroundColor Yellow
-	$outPath = (Resolve-Path $OutputPath).Path
-	Write-Host "OutputPath:$outPath" -ForegroundColor Yellow
-	Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $outPath
-	Write-Host 'Build Completed' -ForegroundColor Green
+    $outPath = (Resolve-Path $OutputPath).Path
+    Write-Host "OutputPath:$outPath" -ForegroundColor Yellow
+    Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $outPath
+    Write-Host 'Build Completed' -ForegroundColor Green
     
     Write-Host 'Compress Starting' -ForegroundColor Yellow
-	$CurDateString = Get-Date -Format "yyyyMMddHHmmss"
-	$ZIPFileName = "$ServiceName$CurDateString.zip"
-	$CurPath = (Resolve-Path .).Path
-	$ZIPFilePath = "$CurPath\$ZIPFileName"
-	Compress-Archive -Path "$outPath\*" -DestinationPath $ZIPFilePath
-	Write-Host "Compress Completed $ZIPFilePath" -ForegroundColor Green
+    $CurDateString = Get-Date -Format "yyyyMMddHHmmss"
+    $ZIPFileName = "$ServiceName$CurDateString.zip"
+    $CurPath = (Resolve-Path .).Path
+    $ZIPFilePath = "$CurPath\$ZIPFileName"
+    Compress-Archive -Path "$outPath\*" -DestinationPath $ZIPFilePath
+    Write-Host "Compress Completed $ZIPFilePath" -ForegroundColor Green
     
     Write-Host 'Deploy Starting' -ForegroundColor Yellow
     $Session = New-PSSession -ComputerName $ComputerName -Credential $Credential
@@ -35,7 +36,7 @@ function Start-DeploySvc {
         if (!$Service) {
             #如果没有服务,就创建此服务
             Invoke-Command -Session $Session -ScriptBlock {
-                Param($rootPath, $svcName, $port)
+                Param($rootPath, $svcName, $binPathName, $port)
                 $fullPath = "$rootPath$svcName"
                 if (!(Test-Path -Path $fullPath)) {
                     Write-Host "1.创建目录$fullPath" -ForegroundColor Yellow
@@ -43,12 +44,12 @@ function Start-DeploySvc {
                 }
                 
                 Write-Host "3.创建服务$svcName" -ForegroundColor Yellow
-                New-Service -Name $svcName -BinaryPathName "$fullPath\Giant.WCS.exe" -Description $svcName -DisplayName $svcName -StartupType Automatic
+                New-Service -Name $svcName -BinaryPathName "$fullPath\$binPathName" -Description $svcName -DisplayName $svcName -StartupType Automatic
     
                 Write-Host "4.打开防火墙端口$port" -ForegroundColor Yellow
                 New-NetFirewallRule -Name "$svcName$port" -DisplayName "$svcName$port" -Action Allow -Protocol TCP -LocalPort $port -Direction Inbound
     
-            } -ArgumentList $RemotePath, $ServiceName, $ServicePort
+            } -ArgumentList $RemotePath, $ServiceName, $BinaryPathName, $ServicePort
         }
     
         $RemoteDestinationPath = "$RemotePath$ServiceName\"
