@@ -18,15 +18,27 @@ Install.ps1
 #前端
 Start-Deploy -ComputerName 127.0.0.1 -WebSiteName DefaultWebSite -WebSitePort 8051 -ScriptBlock { npm run build:live } -OutputPath .\dist\
 
-#后端
+#后端 dotnet core
 Start-Deploy -ComputerName 127.0.0.1 -WebSiteName DefaultWebSite -WebSitePort 8053 -ScriptBlock { param($o) dotnet publish -o $o -c "Release" --no-self-contained -v m --nologo } -OutputPath .\bin\publish\
+
+#后端 dotnet framework
+Start-Deploy -ComputerName 192.171.1.5 -WebSiteName DefaultWebSite -WebSitePort 8053 -ScriptBlock {
+    $MSBuildExe="${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
+    &$MSBuildExe -p:Configuration=Release
+} -OutputPath .\bin\Release\
 ```
 
 ## 自动编译然后发布为服务
 
 ```powershell
-#后端
-Start-DeploySvc -ComputerName 127.0.0.1 -ServiceName DefaultService -BinaryPathName AppName.exe -ServicePort 8054
+#后端 dotnet core
+Start-DeploySvc -ComputerName 127.0.0.1 -ServiceName DefaultService -BinaryPathName DefaultService.exe -ServicePort 8054
+
+#后端 dotnet framework
+Start-DeploySvc -ComputerName 192.171.1.5 -ServiceName DefaultService -BinaryPathName DefaultService.exe -ServicePort 8054 -ScriptBlock {
+    $MSBuildExe="${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
+    &$MSBuildExe -p:Configuration=Release
+} -OutputPath .\bin\Release\
 ```
 
 ## 前置条件
