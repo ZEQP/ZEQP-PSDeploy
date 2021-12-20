@@ -41,6 +41,16 @@ Start-DeploySvc -ComputerName 192.171.1.5 -ServiceName DefaultService -BinaryPat
 } -OutputPath .\bin\Release\
 ```
 
+## 只更新文件
+
+```powershell
+#把本地OutputPath目录的所有文件
+#打包为ProjectNameyyyyMMddHHmmss.zip
+#复制到目标服务器RemotePath
+#然后解压到目标服务器RemotePath\ProjectName目录下面
+Update-DeployFile -ComputerName 127.0.0.1 -Credential Administrator -OutputPath .\bin\Release\ -RemotePath D:\Publish\ -ProjectName AppName
+```
+
 ## 前置条件
 
 连接到指定的服务器，是运用了PowerShell的运程管理功能
