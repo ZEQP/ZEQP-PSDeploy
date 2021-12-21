@@ -1,4 +1,4 @@
-# Start-DeploySvc -ComputerName 139.9.69.110 -ServiceName WMSWCS -ServicePort 8054
+﻿# Start-DeploySvc -ComputerName 139.9.69.110 -ServiceName WMSWCS -ServicePort 8054
 function Start-DeploySvc {
     param (
         [string]$ComputerName = "localhost",

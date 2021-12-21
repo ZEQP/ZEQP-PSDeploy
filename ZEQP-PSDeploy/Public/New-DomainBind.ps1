@@ -1,4 +1,4 @@
-# New-DomainBind -ComputerName 139.9.69.110 -WebSiteName WMSWeb -Protocol https -DomainName liuju.cc
+﻿# New-DomainBind -ComputerName 139.9.69.110 -WebSiteName WMSWeb -Protocol https -DomainName liuju.cc
 function New-DomainBind {
     param (
         [string]$ComputerName = "localhost",

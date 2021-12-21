@@ -1,4 +1,4 @@
-function Update-DomainBind {
+﻿function Update-DomainBind {
     param (
         [String]$ComputerName = "localhost",
         [PSCredential]$Credential = "Administrator"

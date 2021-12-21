@@ -1,4 +1,4 @@
-# Remove-Deploy -ComputerName 139.9.69.110 -WebSiteName WMSWeb -WebSitePort 8051
+﻿# Remove-Deploy -ComputerName 139.9.69.110 -WebSiteName WMSWeb -WebSitePort 8051
 function Remove-DeploySvc {
     param (
         [string]$ComputerName = "localhost",
