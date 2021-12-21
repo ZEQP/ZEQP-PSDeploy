@@ -19,7 +19,14 @@ Install.ps1
 Start-Deploy -ComputerName 127.0.0.1 -WebSiteName DefaultWebSite -WebSitePort 8051 -ScriptBlock { npm run build:live } -OutputPath .\dist\
 
 #后端 dotnet core
-Start-Deploy -ComputerName 127.0.0.1 -WebSiteName DefaultWebSite -WebSitePort 8053 -ScriptBlock { param($o) dotnet publish -o $o -c "Release" --no-self-contained -v m --nologo } -OutputPath .\bin\publish\
+#开发环境
+Start-Deploy -ComputerName 127.0.0.1 -WebSiteName DefaultWebSite -WebSitePort 8053 -ScriptBlock { 
+    param($o) dotnet publish -o $o -c "Debug" --no-self-contained -v m --nologo /p:EnvironmentName=Development 
+} -OutputPath .\bin\publish\
+#生产环境
+Start-Deploy -ComputerName 127.0.0.1 -WebSiteName DefaultWebSite -WebSitePort 8053 -ScriptBlock { 
+    param($o) dotnet publish -o $o -c "Release" --no-self-contained -v m --nologo /p:EnvironmentName=Production 
+} -OutputPath .\bin\publish\
 
 #后端 dotnet framework
 Start-Deploy -ComputerName 192.171.1.5 -WebSiteName DefaultWebSite -WebSitePort 8053 -ScriptBlock {
