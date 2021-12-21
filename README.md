@@ -29,7 +29,7 @@ Start-Deploy -ComputerName 127.0.0.1 -WebSiteName DefaultWebSite -WebSitePort 80
 } -OutputPath .\bin\publish\
 
 #后端 dotnet framework
-Start-Deploy -ComputerName 192.171.1.5 -WebSiteName DefaultWebSite -WebSitePort 8053 -ScriptBlock {
+Start-Deploy -ComputerName 127.0.0.1 -WebSiteName DefaultWebSite -WebSitePort 8053 -ScriptBlock {
     $MSBuildExe="${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
     &$MSBuildExe -p:Configuration=Release
 } -OutputPath .\bin\Release\
@@ -42,7 +42,7 @@ Start-Deploy -ComputerName 192.171.1.5 -WebSiteName DefaultWebSite -WebSitePort 
 Start-DeploySvc -ComputerName 127.0.0.1 -ServiceName DefaultService -BinaryPathName DefaultService.exe -ServicePort 8054
 
 #后端 dotnet framework
-Start-DeploySvc -ComputerName 192.171.1.5 -ServiceName DefaultService -BinaryPathName DefaultService.exe -ServicePort 8054 -ScriptBlock {
+Start-DeploySvc -ComputerName 127.0.0.1 -ServiceName DefaultService -BinaryPathName DefaultService.exe -ServicePort 8054 -ScriptBlock {
     $MSBuildExe="${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\MSBuild.exe"
     &$MSBuildExe -p:Configuration=Release
 } -OutputPath .\bin\Release\
