@@ -39,7 +39,15 @@ Start-Deploy -ComputerName 127.0.0.1 -WebSiteName DefaultWebSite -WebSitePort 80
 
 ```powershell
 #后端 dotnet core
-Start-DeploySvc -ComputerName 127.0.0.1 -ServiceName DefaultService -BinaryPathName DefaultService.exe -ServicePort 8054
+#开发环境
+Start-DeploySvc -ComputerName 127.0.0.1 -ServiceName DefaultService -BinaryPathName "DefaultService.exe --environment Development" -ServicePort 8053 -ScriptBlock { 
+    param($o) dotnet publish -o $o -c "Debug" --no-self-contained -v m --nologo /p:EnvironmentName=Development
+} -OutputPath .\bin\publish\
+
+#生产环境
+Start-DeploySvc -ComputerName 127.0.0.1 -ServiceName DefaultService -BinaryPathName "DefaultService.exe --environment Production" -ServicePort 8053 -ScriptBlock { 
+    param($o) dotnet publish -o $o -c "Release" --no-self-contained -v m --nologo /p:EnvironmentName=Production
+} -OutputPath .\bin\publish\
 
 #后端 dotnet framework
 Start-DeploySvc -ComputerName 127.0.0.1 -ServiceName DefaultService -BinaryPathName DefaultService.exe -ServicePort 8054 -ScriptBlock {
