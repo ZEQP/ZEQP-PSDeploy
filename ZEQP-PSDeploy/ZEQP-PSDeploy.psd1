@@ -74,6 +74,7 @@
         'Remove-Deploy',
         'Remove-DeploySvc',
         'Start-Deploy',
+        'Start-DeployCert',
         'Start-DeployFile',
         'Start-DeploySvc',
         'Update-DomainBind'
