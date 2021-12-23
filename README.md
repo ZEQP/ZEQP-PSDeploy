@@ -8,8 +8,9 @@
 然后在目录下面以管理员方式运行Install.ps1
 
 ```powershell
+git clone https://github.com/ZEQP/ZEQP-PSDeploy.git
 cd .\ZEQP-PSDeploy
-Install.ps1
+.\Install.ps1
 ```
 
 ## 自动编译然后发布到指定服务器IIS站点
