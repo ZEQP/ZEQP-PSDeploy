@@ -1,11 +1,12 @@
-﻿# New-DomainBind -ComputerName 139.9.69.110 -WebSiteName WMSWeb -Protocol https -DomainName liuju.cc
+﻿# New-DomainBind -ComputerName 127.0.0.1 -WebSiteName Blog -HostHeader blog.liuju.cc -Subject *.liuju.cc
 function New-DomainBind {
     param (
         [string]$ComputerName = "localhost",
         [PSCredential]$Credential = "Administrator",
         [string]$WebSiteName,
-        [string]$Protocol = "http",
-        [string]$DomainName
+        [string]$HostHeader,
+        [string]$IPAddress = "*",
+        [string]$Subject
     )
     Write-Host 'Domain Bindding Starting' -ForegroundColor Yellow
     $Session = New-PSSession -ComputerName $ComputerName -Credential $Credential
@@ -13,15 +14,14 @@ function New-DomainBind {
     if ($Session.State -eq "Opened") {
         Write-Host 'Successfully connected to the server' -ForegroundColor Green
         Invoke-Command -Session $Session -ScriptBlock {
-            Param($siteName, $proto, $domain)
-            $hostHeader = "$siteName.$domain".ToLower()
-            New-WebBinding -Name $siteName -Protocol "http" -IPAddress "*" -Port 80 -HostHeader $hostHeader
-            if (($cert = Get-ChildItem "Cert:\LocalMachine\My" | Where-Object { $_.Subject -like "*.$domain" } | Select-Object -First 1) -and ($proto -eq "https")) {
-                New-WebBinding -Name $siteName -Protocol "https" -HostHeader $hostHeader -Port 443 -SslFlags 0
+            Param($siteName, $subject, $hostHeader, $ipAddress)
+            New-WebBinding -Name $siteName -Protocol "http" -IPAddress $ipAddress -Port 80 -HostHeader $hostHeader
+            if ($cert = Get-ChildItem "Cert:\LocalMachine\My" | Where-Object { $_.Subject -like $subject } | Select-Object -First 1) {
+                New-WebBinding -Name $siteName -Protocol "https" -IPAddress $ipAddress -HostHeader $hostHeader -Port 443 -SslFlags 0
                 $binding = Get-WebBinding -Name $siteName -Protocol "https" -HostHeader $hostHeader
                 $binding.AddSslCertificate($cert.Thumbprint, "My")
             }
-        } -ArgumentList $WebSiteName, $Protocol, $DomainName
+        } -ArgumentList $WebSiteName, $Subject, $HostHeader, $IPAddress
         Write-Host 'Disconnected from server' -ForegroundColor Yellow
         Disconnect-PSSession -Session $Session
     }

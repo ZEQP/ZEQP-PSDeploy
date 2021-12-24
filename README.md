@@ -67,6 +67,14 @@ Start-DeploySvc -ComputerName 127.0.0.1 -ServiceName DefaultService -BinaryPathN
 Start-DeployFile -ComputerName 127.0.0.1 -Credential Administrator -OutputPath .\bin\Release\ -RemotePath D:\Publish\ -ProjectName AppName
 ```
 
+## 其它部署命令
+
+```powershell
+#部署通过Posh-ACME申请的证书至服务器
+#https://github.com/rmbolger/Posh-ACME
+Start-DeployCert -ComputerName 182.43.196.20 -Subject *.giantliu.cn
+```
+
 ## 前置条件
 
 连接到指定的服务器，是运用了PowerShell的运程管理功能
