@@ -17,7 +17,7 @@ function New-DomainBind {
             Param($siteName, $subject, $hostHeader, $ipAddress)
             New-WebBinding -Name $siteName -Protocol "http" -IPAddress $ipAddress -Port 80 -HostHeader $hostHeader
             if ($cert = Get-ChildItem "Cert:\LocalMachine\My" | Where-Object { $_.Subject -like $subject } | Select-Object -First 1) {
-                New-WebBinding -Name $siteName -Protocol "https" -IPAddress $ipAddress -HostHeader $hostHeader -Port 443 -SslFlags 0
+                New-WebBinding -Name $siteName -Protocol "https" -IPAddress $ipAddress -HostHeader $hostHeader -Port 443 -SslFlags 1
                 $binding = Get-WebBinding -Name $siteName -Protocol "https" -HostHeader $hostHeader
                 $binding.AddSslCertificate($cert.Thumbprint, "My")
             }
