@@ -6,7 +6,8 @@
         [string]$RemotePath = "D:\Publish\",
         [int]$WebSitePort,
         [ScriptBlock]$ScriptBlock = { npm run build:live },
-        [string]$OutputPath = ".\dist\"
+        [string]$OutputPath = ".\dist\",
+        [bool]$IsFull = $true
     )
     Write-Host "Build Starting" -ForegroundColor Yellow
     $outPath = (Resolve-Path $OutputPath).Path
@@ -19,7 +20,12 @@
     $ZIPFileName = "$WebSiteName$CurDateString.zip"
     $CurPath = (Resolve-Path .).Path
     $ZIPFilePath = "$CurPath\$ZIPFileName"
-    Compress-Archive -Path "$outPath\*" -DestinationPath $ZIPFilePath
+    if ($IsFull -eq $true) {
+        Compress-Archive -Path "$outPath\*" -DestinationPath $ZIPFilePath
+    }
+    else {
+        Get-ChildItem -Path "$outPath\*" | Where-Object { $_.LastWriteTime -ge (Get-Date -Format "yyyy-MM-dd") } | Compress-Archive -DestinationPath $ZIPFilePath
+    }
     Write-Host "Compress Completed $ZIPFilePath" -ForegroundColor Green
 
     Write-Host "Deploy Starting" -ForegroundColor Yellow
@@ -69,7 +75,7 @@
 
         #部署系统
         Invoke-Command -Session $Session -ScriptBlock {
-            Param($pool, $file, $path)
+            Param($pool, $file, $path, $full)
             Write-Host "Stop the AppPool:$pool" -ForegroundColor Yellow
             Stop-WebAppPool -Name $pool
             while ((Get-WebAppPoolState -Name $pool).Value -ne "Stopped") {
@@ -78,11 +84,11 @@
             }
             Get-WebAppPoolState -Name $pool
             Write-Host "Start Expand files on the server:$path" -ForegroundColor Yellow
-            Remove-Item -Path $path -Recurse -Force
+            if ($full -eq $true) { Remove-Item -Path $path -Recurse -Force }
             Expand-Archive -Path $file -DestinationPath $path -Force
             Write-Host "Restart the AppPool:$pool" -ForegroundColor Yellow
             Start-WebAppPool -Name $pool
-        } -ArgumentList $ApplicationPool, $RemoteZipPath, $RemoteDestinationPath
+        } -ArgumentList $ApplicationPool, $RemoteZipPath, $RemoteDestinationPath, $IsFull
 
         Write-Host "Disconnected from server" -ForegroundColor Yellow
         Disconnect-PSSession -Session $Session

@@ -8,7 +8,8 @@ function Start-DeploySvc {
         [string]$RemotePath = "D:\Publish\",
         [int]$ServicePort,
         [ScriptBlock]$ScriptBlock = { param($o) dotnet publish -o $o -c "Release" --no-self-contained -v m --nologo },
-        [string]$OutputPath = ".\bin\publish\"
+        [string]$OutputPath = ".\bin\publish\",
+        [bool]$IsFull = $true
     )
     Write-Host 'Build Starting' -ForegroundColor Yellow
     $outPath = (Resolve-Path $OutputPath).Path
@@ -21,7 +22,12 @@ function Start-DeploySvc {
     $ZIPFileName = "$ServiceName$CurDateString.zip"
     $CurPath = (Resolve-Path .).Path
     $ZIPFilePath = "$CurPath\$ZIPFileName"
-    Compress-Archive -Path "$outPath\*" -DestinationPath $ZIPFilePath
+    if ($IsFull -eq $true) {
+        Compress-Archive -Path "$outPath\*" -DestinationPath $ZIPFilePath
+    }
+    else {
+        Get-ChildItem -Path "$outPath\*" | Where-Object { $_.LastWriteTime -ge (Get-Date -Format "yyyy-MM-dd") } | Compress-Archive -DestinationPath $ZIPFilePath
+    }
     Write-Host "Compress Completed $ZIPFilePath" -ForegroundColor Green
     
     Write-Host 'Deploy Starting' -ForegroundColor Yellow
@@ -57,7 +63,7 @@ function Start-DeploySvc {
     
         #部署服务
         Invoke-Command -Session $Session -ScriptBlock {
-            Param($name, $file, $path)
+            Param($name, $file, $path, $full)
             Write-Host "Stop the Service:$name" -ForegroundColor Yellow
             Stop-Service -Name $name
             while ((Get-Service -Name $name).Status -ne "Stopped") {
@@ -66,12 +72,12 @@ function Start-DeploySvc {
             }
             Get-Service -Name $name
             Write-Host "Start Expand files on the server:$path" -ForegroundColor Yellow
-            Remove-Item -Path $path -Recurse -Force
+            if ($full -eq $true) { Remove-Item -Path $path -Recurse -Force }
             Expand-Archive -Path $file -DestinationPath $path -Force
             Write-Host "Restart the Service:$name" -ForegroundColor Yellow
             Start-Service -Name $name
     
-        } -ArgumentList $ServiceName, $RemoteZipPath, $RemoteDestinationPath
+        } -ArgumentList $ServiceName, $RemoteZipPath, $RemoteDestinationPath, $IsFull
     
         Write-Host 'Disconnected from server' -ForegroundColor Yellow
         Disconnect-PSSession -Session $Session
