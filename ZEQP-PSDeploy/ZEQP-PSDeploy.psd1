@@ -73,6 +73,7 @@
         'New-DomainBind',
         'Remove-Deploy',
         'Remove-DeploySvc',
+        'Start-Backup',
         'Start-Deploy',
         'Start-DeployCert',
         'Start-DeployFile',
