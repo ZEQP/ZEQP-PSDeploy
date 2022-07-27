@@ -73,12 +73,12 @@ Start-DeployFile -ComputerName 127.0.0.1 -Credential Administrator -OutputPath .
 #把本地D:\DataBackup\*.nb3文件备份到服务器D:\Backup\目录
 #备份文件会检查目标文件是不是存再,并且文件大小一至. 
 #如果存再并大小一至,就跳过备份
-Start-Backup -ComputerName 10.76.1.100 -Path "D:\DataBackup\*.nb3" -RemotePath "D:\Backup\"
+Start-Backup -ComputerName 127.0.0.1 -Path "D:\DataBackup\*.nb3" -RemotePath "D:\Backup\"
 
 #因为我们一般是通过计划任务自动运行的,所以我们一般会把帐号密码一起放到任务里面就可以向下面这样写
 $password = ConvertTo-SecureString "MyPlainTextPassword" -AsPlainText -Force
-$Cred = New-Object System.Management.Automation.PSCredential ("username", $password)
-Start-Backup -ComputerName 10.76.1.100 -$Credential $Cred -Path "D:\DataBackup\*.nb3" -RemotePath "D:\Backup\"
+$Cred = New-Object System.Management.Automation.PSCredential ("Administrator", $password)
+Start-Backup -ComputerName 127.0.0.1 -$Credential $Cred -Path "D:\DataBackup\*.nb3" -RemotePath "D:\Backup\"
 ```
 
 ## 其它部署命令
