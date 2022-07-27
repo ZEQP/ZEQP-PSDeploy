@@ -1,4 +1,7 @@
-﻿function Start-Backup {
+﻿#$password = ConvertTo-SecureString "MyPlainTextPassword" -AsPlainText -Force
+#$Cred = New-Object System.Management.Automation.PSCredential ("username", $password)
+#Start-Backup -ComputerName 10.76.1.100 -$Credential $Cred -Path "D:\DataBackup\*.nb3" -RemotePath "D:\Backup\"
+function Start-Backup {
 	param (
 		[string]$ComputerName = "localhost",
 		[PSCredential]$Credential = "Administrator",
@@ -16,7 +19,7 @@
 					Param($path)
 					Get-Item -Path $path
 				} -ArgumentList $fullPath)
-			if ($null -eq $remoteFile || $remoteFile.LastWriteTime -ne $_.LastWriteTime) {
+			if (($null -eq $remoteFile) -or ($remoteFile.Length -ne $_.Length)) {
 				Write-Host "Copy $_ To $fullPath" -ForegroundColor Green
 				Copy-Item -Path $_.FullName -Destination $fullPath -ToSession $Session
 			}

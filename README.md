@@ -67,6 +67,18 @@ Start-DeploySvc -ComputerName 127.0.0.1 -ServiceName DefaultService -BinaryPathN
 Start-DeployFile -ComputerName 127.0.0.1 -Credential Administrator -OutputPath .\bin\Release\ -RemotePath D:\Publish\ -ProjectName AppName
 ```
 
+## 备份文件
+
+```powershell
+#把本地D:\DataBackup\*.nb3文件备份到服务器D:\Backup\目录
+Start-Backup -ComputerName 10.76.1.100 -Path "D:\DataBackup\*.nb3" -RemotePath "D:\Backup\"
+
+#因为我们一般是通过计划任务自动运行的,所以我们一般会把帐号密码一起放到任务里面就可以向下面这样写
+$password = ConvertTo-SecureString "MyPlainTextPassword" -AsPlainText -Force
+$Cred = New-Object System.Management.Automation.PSCredential ("username", $password)
+Start-Backup -ComputerName 10.76.1.100 -$Credential $Cred -Path "D:\DataBackup\*.nb3" -RemotePath "D:\Backup\"
+```
+
 ## 其它部署命令
 
 ```powershell
