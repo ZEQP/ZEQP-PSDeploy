@@ -76,9 +76,10 @@ Start-DeployFile -ComputerName 127.0.0.1 -Credential Administrator -OutputPath .
 Start-Backup -ComputerName 127.0.0.1 -Path "D:\DataBackup\*.nb3" -RemotePath "D:\Backup\"
 
 #因为我们一般是通过计划任务自动运行的,所以我们一般会把帐号密码一起放到任务里面就可以向下面这样写
+#C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -Command ". 'F:\BackupToRemote.ps1'"
 $password = ConvertTo-SecureString "MyPlainTextPassword" -AsPlainText -Force
-$Cred = New-Object System.Management.Automation.PSCredential ("Administrator", $password)
-Start-Backup -ComputerName 127.0.0.1 -$Credential $Cred -Path "D:\DataBackup\*.nb3" -RemotePath "D:\Backup\"
+$Cred = New-Object System.Management.Automation.PSCredential("Administrator", $password)
+Start-Backup -ComputerName 127.0.0.1 -Credential $Cred -Path "D:\DataBackup\*.nb3" -RemotePath "D:\Backup\"
 ```
 
 ## 其它部署命令
