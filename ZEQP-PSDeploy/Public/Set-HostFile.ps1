@@ -25,8 +25,7 @@ function Set-HostFile {
     }
     Write-Host "Has Domain $Domain : $domainIndex"  -ForegroundColor Yellow
     if ($domainIndex -eq -1) {
-        $newline = [System.Environment]::NewLine
-        Add-Content -Path $path -Value "$newline$IP $Domain"
+        Add-Content -Path $path -Value "`r`n$newline$IP $Domain"
     }else {
         $content[$domainIndex] = "$IP $Domain"
         Set-Content -Path $path -Value $content
