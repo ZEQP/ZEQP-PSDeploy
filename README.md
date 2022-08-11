@@ -90,6 +90,13 @@ Start-Backup -ComputerName 127.0.0.1 -Credential $Cred -Path "D:\DataBackup\*.nb
 Start-DeployCert -ComputerName 182.43.196.20 -Subject *.giantliu.cn
 ```
 
+```powershell
+#设置hosts文件,修改域名解析
+Set-HostFile -IP 10.76.99.28 -Domain demo.ctr.com
+Set-HostFile -IP 192.168.11.28 -Domain demo.ctr.com
+Set-HostFile -IP 127.0.0.1 -Domain www.baidu.com
+```
+
 ## 前置条件
 
 连接到指定的服务器，是运用了PowerShell的运程管理功能

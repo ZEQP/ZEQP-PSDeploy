@@ -9,31 +9,31 @@
 @{
 
     # Script module or binary module file associated with this manifest.
-    RootModule        = 'ZEQP-PSDeploy.psm1'
+    RootModule             = 'ZEQP-PSDeploy.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '1.0.0'
+    ModuleVersion          = '1.0.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
 
     # ID used to uniquely identify this module
-    GUID              = '66bdfd76-6f4f-4686-87ef-3965b0b5074f'
+    GUID                   = '66bdfd76-6f4f-4686-87ef-3965b0b5074f'
 
     # Author of this module
-    Author            = 'GiantLiu'
+    Author                 = 'GiantLiu'
 
     # Company or vendor of this module
-    CompanyName       = 'ZEQP'
+    CompanyName            = 'ZEQP'
 
     # Copyright statement for this module
-    Copyright         = '(c) GiantLiu. All rights reserved.'
+    Copyright              = '(c) GiantLiu. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description       = 'ZEQP-PSDeploy'
+    Description            = 'ZEQP-PSDeploy'
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion = '5.1'
+    PowerShellVersion      = '5.1'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''
@@ -69,7 +69,7 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @(
+    FunctionsToExport      = @(
         'New-DomainBind',
         'Remove-Deploy',
         'Remove-DeploySvc',
@@ -78,17 +78,18 @@
         'Start-DeployCert',
         'Start-DeployFile',
         'Start-DeploySvc',
-        'Update-DomainBind'
+        'Update-DomainBind',
+        'Set-HostFile'
     )
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport   = @()
+    CmdletsToExport        = @()
 
     # Variables to export from this module
-    VariablesToExport = @()
+    VariablesToExport      = @()
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport   = '*'
+    AliasesToExport        = '*'
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -100,7 +101,7 @@
     # FileList = @()
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
-    PrivateData       = @{
+    PrivateData            = @{
 
         PSData = @{
 
@@ -133,7 +134,7 @@
     } # End of PrivateData hashtable
 
     # HelpInfo URI of this module
-    HelpInfoURI       = 'https://github.com/ZEQP/ZEQP-PSDeploy'
+    HelpInfoURI            = 'https://github.com/ZEQP/ZEQP-PSDeploy'
 
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''
