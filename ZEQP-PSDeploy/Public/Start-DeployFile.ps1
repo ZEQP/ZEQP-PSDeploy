@@ -2,6 +2,7 @@
 function Start-DeployFile {
 	param (
 		[string]$ComputerName = "localhost",
+		[int]$ComputerPort = 5985,
 		[PSCredential]$Credential = "Administrator",
 		[string]$OutputPath = ".\bin\Release\",
 		[string]$RemotePath = "D:\Publish\",
@@ -19,7 +20,7 @@ function Start-DeployFile {
 	Write-Host "Compress Completed $ZIPFilePath" -ForegroundColor Green
 
 	Write-Host 'Deploy Starting' -ForegroundColor Yellow
-	$Session = New-PSSession -ComputerName $ComputerName -Credential $Credential
+	$Session = New-PSSession -ComputerName $ComputerName -Port $ComputerPort -Credential $Credential
 	$Session
 	if ($Session.State -eq "Opened") {
 		Write-Host 'Successfully connected to the server' -ForegroundColor Green
