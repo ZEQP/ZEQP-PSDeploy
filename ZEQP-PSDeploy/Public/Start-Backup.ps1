@@ -4,12 +4,13 @@
 function Start-Backup {
 	param (
 		[string]$ComputerName = "localhost",
+		[int]$ComputerPort = 5985,
 		[PSCredential]$Credential = "Administrator",
 		[string]$Path = ".",
 		[string]$RemotePath = "D:\Backup\"
 	)
 	Write-Host 'Backup Starting' -ForegroundColor Yellow
-	$Session = New-PSSession -ComputerName $ComputerName -Credential $Credential
+	$Session = New-PSSession -ComputerName $ComputerName -Port $ComputerPort -Credential $Credential
 	$Session
 	if ($Session.State -eq "Opened") {
 		Write-Host 'Successfully connected to the server' -ForegroundColor Green

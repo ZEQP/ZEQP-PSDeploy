@@ -1,9 +1,10 @@
 ﻿function Update-DomainBind {
     param (
         [String]$ComputerName = "localhost",
+        [int]$ComputerPort = 5985,
         [PSCredential]$Credential = "Administrator"
     )
-    $Session = New-PSSession -ComputerName $ComputerName -Credential $Credential
+    $Session = New-PSSession -ComputerName $ComputerName -Port $ComputerPort -Credential $Credential
     $Session
     if ($Session.State -eq "Opened") {
         Write-Host 'Successfully connected to the server' -ForegroundColor Green
