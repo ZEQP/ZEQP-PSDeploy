@@ -7,7 +7,7 @@ function Start-DeploySvc {
         [string]$ServiceName,
         [string]$BinaryPathName,
         [string]$RemotePath = "D:\Publish\",
-        [int]$ServicePort,
+        [int]$ServicePort = 0,
         [ScriptBlock]$ScriptBlock = { param($o) dotnet publish -o $o -c "Release" --no-self-contained -v m --nologo },
         [string]$OutputPath = ".\bin\publish\",
         [bool]$IsFull = $true
@@ -52,10 +52,10 @@ function Start-DeploySvc {
                 
                 Write-Host "3.创建服务$svcName" -ForegroundColor Yellow
                 New-Service -Name $svcName -BinaryPathName "$fullPath\$binPathName" -Description $svcName -DisplayName $svcName -StartupType Automatic
-    
-                Write-Host "4.打开防火墙端口$port" -ForegroundColor Yellow
-                New-NetFirewallRule -Name "$svcName$port" -DisplayName "$svcName$port" -Action Allow -Protocol TCP -LocalPort $port -Direction Inbound
-    
+                if ($port -ne 0) {
+                    Write-Host "4.打开防火墙端口$port" -ForegroundColor Yellow
+                    New-NetFirewallRule -Name "$svcName$port" -DisplayName "$svcName$port" -Action Allow -Protocol TCP -LocalPort $port -Direction Inbound
+                }
             } -ArgumentList $RemotePath, $ServiceName, $BinaryPathName, $ServicePort
         }
     

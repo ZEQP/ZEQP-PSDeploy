@@ -5,7 +5,7 @@
         [PSCredential]$Credential = "Administrator",
         [string]$WebSiteName,
         [string]$RemotePath = "D:\Publish\",
-        [int]$WebSitePort,
+        [int]$WebSitePort = 0,
         [ScriptBlock]$ScriptBlock = { npm run build:live },
         [string]$OutputPath = ".\dist\",
         [bool]$IsFull = $true
@@ -64,9 +64,10 @@
                 #Set-ItemProperty "IIS:\Sites\$siteName" -Name applicationDefaults.preloadEnabled -Value True
                 Start-Website -Name $siteName
 
-                Write-Host "4.打开防火墙端口$port" -ForegroundColor Yellow
-                New-NetFirewallRule -Name "$siteName$port" -DisplayName "$siteName$port" -Action Allow -Protocol TCP -LocalPort $port -Direction Inbound
-
+                if ($port -ne 0) {
+                    Write-Host "4.打开防火墙端口$port" -ForegroundColor Yellow
+                    New-NetFirewallRule -Name "$siteName$port" -DisplayName "$siteName$port" -Action Allow -Protocol TCP -LocalPort $port -Direction Inbound
+                }
             } -ArgumentList $RemotePath, $WebSiteName, $WebSitePort
         }
 
