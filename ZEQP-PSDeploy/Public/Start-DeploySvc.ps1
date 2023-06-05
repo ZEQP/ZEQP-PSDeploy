@@ -15,6 +15,10 @@ function Start-DeploySvc {
     Write-Host 'Build Starting' -ForegroundColor Yellow
     $outPath = (Resolve-Path $OutputPath).Path
     Write-Host "OutputPath:$outPath" -ForegroundColor Yellow
+    if (!(Test-Path -Path $outPath)) {
+        Write-Host "1.创建目录$outPath" -ForegroundColor Yellow
+        New-Item -Path $outPath -ItemType Directory
+    }
     Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList $outPath
     Write-Host 'Build Completed' -ForegroundColor Green
     
